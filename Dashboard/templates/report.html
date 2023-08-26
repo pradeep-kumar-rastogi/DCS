@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="topnav">
+    <div class="container-fluid">
+        {% include 'menu.html' %}
+    </div>
+</div>
+
+
+
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <div class="date-filter sanpar row g-3 align-items-center">
+                            <div class="col-md-3 d-flex">
+                                <label for="start-date">Start Date:</label>
+                                <input type="text" class="datepicker" id="start-date" placeholder="01-01-2001">
+                            </div>
+                            <div class="col-md-3 d-flex">
+                                <label for="end-date">End Date:</label>
+                                <input type="text" class="datepicker" id="end-date" placeholder="01-01-2001">
+                            </div>
+
+                            <div class="col-md-2"><button id="apply-button" type="button"
+                                    class="btn btn-lg w-100 btn-primary">Apply</button></div>
+
+                            <div class="col-md-4 d-flex">
+                                <label for="status-filter">Filter by Website:</label>
+                                <select id="status-filter">
+                                    <option value="" selected disabled>Select a website</option>
+                                    {% for item in dropdown_list %}
+                                    <option value="{{ item.websitelink }}">{{ item.websitelink }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <table id="datatable-buttons2" class="table table-striped dt-responsive nowrap">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Website</th>
+                                    <th>Module</th>
+                                    <th>Assign To</th>
+                                    <th>Provide To</th>
+                                    <th data-search="moment-date">upload Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {% for data in combined_data %}
+
+                                <tr>
+                                    <td scope="row">{{ forloop.counter }}</td>
+                                    <td>{{ data.res.websites }}</td>
+                                    <td>{{ data.item.choose_website }}</td>
+                                    <td>{{ data.res.assign_to }}</td>
+                                    <td>{{ data.res.provided_by }}</td>
+                                    <td>{{ data.res.assign_time}}</td>
+                                </tr>
+                                {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Wait for the DOM to be fully loaded before attaching event listeners
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get references to the necessary HTML elements
+        const applyButton = document.getElementById("apply-button");
+        const startDateInput = document.getElementById("start-date");
+        const endDateInput = document.getElementById("end-date");
+        const dataRows = document.querySelectorAll("#datatable-buttons2 tbody tr"); // Select rows specifically
+
+        applyButton.addEventListener("click", function () {
+            // Parse the selected start and end dates from input fields
+            const startDate = new Date(startDateInput.value);
+            const endDate = new Date(endDateInput.value);
+
+            // Loop through each data row in the table
+            dataRows.forEach(row => {
+                const rowData = row.querySelector("td:last-child").textContent;
+                const months = {
+                    "Jan": 0, "Feb": 1, "Mar": 2, "Apr": 3, "May": 4, "June": 5,
+                    "July": 6, "Aug": 7, "Sept": 8, "Oct": 9, "Nov": 10, "Dec": 11
+                };
+                console.log("data........", rowData)
+
+                const datePattern = /([a-zA-Z]+)\. (\d+), (\d+)/;
+                const [, monthStr, day, year] = rowData.match(datePattern);
+
+                const month = months[monthStr];
+                const rowDataDate = new Date(year, month, day);
+
+                // Compare the date from the row with the selected start and end dates
+                if (rowDataDate >= startDate && rowDataDate <= endDate) {
+                    row.style.display = "table-row";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+    });
+
+</script>
+
+<script>
+    $(document).ready(function () {
+        // Initialize datepicker on elements with the "datepicker" class
+        $(".datepicker").datepicker();
+        // Add click event listener to the container divs
+        $(".col-md-3").on("click", function () {
+            // Find the date input within the clicked container
+            var dateInput = $(this).find(".datepicker");
+            // Trigger the datepicker's focus event to open the calendar
+            dateInput.focus();
+        });
+    });
+</script>
+
+
+{% endblock %}

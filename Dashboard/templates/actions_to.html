@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="topnav">
+    <div class="container-fluid">
+        {% include 'menu.html' %}
+    </div>
+</div>
+
+
+{% if error_message %}
+<div class="error">{{ error_message }}</div>
+{% endif %}
+
+
+<div class="page-content">
+    <center>
+        <h1>Actions</h1>
+    </center>
+    <div class="container-fluid">
+        <!-- start page title -->
+        <form name="myform" action="" method="post" enctype="multipart/form-data" id="myform">
+            {% csrf_token %}
+            <div>
+                <label for="Websites">Website Name<sup class="text-danger">*</sup> :</label>
+                <select name="Websites" id="Websites">
+                    <option value="" selected disabled>Select a website</option>
+                    {% for link in website_links %}
+                    <option value="{{ link.id }}">{{ link.id }} - {{ link.websitelink }} - {{link.uploaded_time}}
+                    </option>
+                    {% endfor %}
+                </select>
+                <div class="error"></div>
+            </div>
+            <div>
+                <label for="Provided">Provided By<sup class="text-danger">*</sup> :</label>
+                <input type="text" placeholder="Enter Provided By" id="Provided" name="Provided" value="" required>
+                <div class="error"></div>
+            </div>
+            <div>
+                <label for="Assign_to">Assign To<sup class="text-danger">*</sup> :</label>
+                <input type="text" placeholder="Enter Assign To" id="Assign_to" name="Assign_to" value="" required>
+                <div class="error"></div>
+            </div>
+
+            <div>
+                <label for="Assign_time">Assign Time<sup class="text-danger">*</sup> :</label>
+                <input type="datetime-local" id="Assign_time" name="Assign_time" required>
+                <div class="error"></div>
+            </div>
+
+            <div>
+                <label for="Status">Status<sup class="text-danger">*</sup> :</label>
+                <select id="Status" name="Status" required>
+                    <option value="">Select Status</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="On Hold">On Hold</option>
+                    <option value="On Hold">Pending</option>
+                    <option value="Done">Done</option>
+                </select>
+                <div class="error"></div>
+            </div>
+            <div class="san_btn"><input type="submit" value="Submit"></div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Get the current date and time
+    const currentDate = new Date();
+
+    // Format the date and time as per the datetime-local input format (YYYY-MM-DDTHH:MM)
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = currentDate.getDate().toString().padStart(2, '0');
+    const hours = currentDate.getHours().toString().padStart(2, '0');
+    const minutes = currentDate.getMinutes().toString().padStart(2, '0');
+    const formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+    // Set the default value of the input
+    const assignTimeInput = document.getElementById('Assign_time');
+    assignTimeInput.value = formattedDateTime;
+</script>
+
+{% endblock %}

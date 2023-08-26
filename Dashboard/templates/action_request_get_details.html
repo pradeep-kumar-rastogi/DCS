@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load custom_filter %}
+{% block content %}
+
+<div class="topnav">
+    <div class="container-fluid">
+    {% include 'menu.html' %}
+    </div>
+</div>
+
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table id="datatable-buttons2" class="table table-striped dt-responsive nowrap">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>websitelink</th>
+                                    <th>Assign To</th>
+                                    <th>Assign Time</th>
+                                    <th>Provided By</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for data in show_data1 %}
+                                <tr>
+                                    <td scope="row">{{ forloop.counter }}</td>
+                                    <td>{{ data.websites }}</td>
+                                    <td>{{ data.assign_to }}</td>
+                                    <td>{{ data.assign_time }}</td>
+                                    <td>{{ data.provided_by }}</td>
+                                    <td>{{ data.status }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

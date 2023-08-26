@@ -1,0 +1,267 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load custom_filter %}
+<div class="topnav">
+    <div class="container-fluid">
+        {% include 'menu.html' %}
+    </div>
+</div>
+
+<div class="page-content">
+    <div class="container-fluid">
+        <!-- start page title -->
+        <form name="myform" action="" method="post" enctype="multipart/form-data" id="myform">
+            <center>
+                <h2>Scraping Requisition Update</h2>
+            </center>
+            {% csrf_token %}
+            <div>
+                <label for="website">Website<sup class="text-danger">*</sup> :</label>
+                <input type="url" placeholder="Enter your site name" id="website" name="website"
+                    value="{{result.websitelink}}" required>
+                <div class="error"></div>
+            </div>
+
+            <div>
+                <label for="priority">Priority<sup class="text-danger">*</sup> :</label>
+                <select id="priority" name="priority">
+
+                    {% if result.priority_list == "least" %}
+                    <option value="least" selected>Least</option>
+                    {% else %}
+                    <option value="least">Least</option>
+                    {% endif %}
+
+                    {% if result.priority_list == "medium" %}
+                    <option value="medium" selected>Medium</option>
+                    {% else %}
+                    <option value="medium">Medium</option>
+                    {% endif %}
+
+                    {% if result.priority_list == "high" %}
+                    <option value="high" selected>High</option>
+                    {% else %}
+                    <option value="high">High</option>
+                    {% endif %}
+
+
+                </select>
+            </div>
+
+            <div>
+                <label>Module<sup class="text-danger">*</sup> :</label>
+                <div class="mainsan">
+                    <input type="checkbox" id="dropdown-toggle" class="dropdown-toggle" hidden>
+                    <label for="dropdown-toggle" class="dropdown-btn">Select Options</label>
+                    <div class="dropdown-content">
+
+
+                        {% if result1|check_in_list:"Product" %}
+
+                        <label>
+                            <input type="checkbox" name="choose_website" value="Product" checked> Product
+                        </label>
+                        {% else %}
+                        <label>
+                            <input type="checkbox" name="choose_website" value="Product"> Product
+                        </label>
+                        {% endif %}
+                        {% if result1|check_in_list:" Brand" %}
+                        <label>
+                            <input type="checkbox" name="choose_website" value="Brand" checked> Brand
+                        </label>
+                        {% else %}
+                        <label>
+                            <input type="checkbox" name="choose_website" value="Brand"> Brand
+                        </label>
+                        {% endif %}
+                        {% if result1|check_in_list:" Category" %}
+                        <label>
+                            <input type="checkbox" name="choose_website" value="Category" checked> Category
+                        </label>
+                        {% else %}
+                        <label>
+                            <input type="checkbox" name="choose_website" value="Category"> Category
+                        </label>
+                        {% endif %}
+                        {% if result1|check_in_list:" Others" %}
+                        <label>
+                            <input type="checkbox" name="choose_website" value="Others" checked> Others
+                        </label>
+                        {% else %}
+                        <label>
+                            <input type="checkbox" name="choose_website" value="Others"> Others
+                        </label>
+                        {% endif %}
+
+                        <!-- Add more checkboxes here as needed -->
+                    </div>
+                </div>
+
+
+                <div>
+                    <label>Upload <sup class="text-green"></sup> :</label>
+                    <div class="coose_pr">
+                        <input type="file" id="filename" name="filename">
+                    </div>
+
+                    <div>
+                        <label for="name">Requested By<sup class="text-danger">*</sup> :</label>
+                        <input type="text" placeholder="Enter Requested" id="Reported" name="Reported"
+                            value="{{result.reported}}" required>
+                        <div class="error"></div>
+                    </div>
+
+                    <div>
+                        <label for="Specific">Specific Requirements<sup class="text-danger">*</sup> :</label>
+                        <input type="text" placeholder="Enter your specification Requirements" id="Specific"
+                            name="Specific" value="{{result.specific}}" required>
+                        <div class="error"></div>
+                    </div>
+                    <div class="san_btn"><input type="submit" value="Submit"></div>
+                </div>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $('#website').on('keyup', function () {
+            var websiteValue = $(this).val().trim();
+            var errorDiv = $(this).siblings('.error');
+
+            if (websiteValue === '') {
+                errorDiv.text('Website is required');
+            } else {
+                // Regular expression to validate website format
+                var websiteRegex = /^(https?:\/\/)?([a-z0-9-]+\.)?[a-z0-9-]+\.[a-z]+(\/.*)?$/i;
+
+                if (!websiteRegex.test(websiteValue)) {
+                    errorDiv.text('Invalid website format');
+                } else {
+                    errorDiv.empty();
+                }
+            }
+        });
+
+        $('#Reported').on('keyup', function () {
+            var reportedValue = $(this).val().trim();
+            var errorDiv = $(this).siblings('.error');
+
+            if (reportedValue === '') {
+                errorDiv.text('Reported By is required');
+            } else {
+                // Regular expression to validate reported name format
+                var reportedRegex = /^[A-Za-z][A-Za-z\'',. -]{2,20}$/;
+
+                if (!reportedRegex.test(reportedValue)) {
+                    errorDiv.text('Invalid Format');
+                } else {
+                    errorDiv.empty();
+                }
+            }
+        });
+
+        $('#Specific').on('keyup', function () {
+            var specificValue = $(this).val().trim();
+            var errorDiv = $(this).siblings('.error');
+
+            if (specificValue === '') {
+                errorDiv.text('Specific Requirements is required');
+            } else {
+                // Regular expression to validate specific requirements format
+                var specificRegex = /^[a-zA-Z,\s]+$/;
+
+                if (!specificRegex.test(specificValue)) {
+                    errorDiv.text('Invalid Format');
+                } else {
+                    errorDiv.empty();
+                }
+            }
+        });
+
+        $('#myform').on('submit', function (e) {
+            var websiteValue = $('#website').val().trim();
+            var websiteErrorDiv = $('#website').siblings('.error');
+            var reportedValue = $('#Reported').val().trim();
+            var reportedErrorDiv = $('#Reported').siblings('.error');
+            var specificValue = $('#Specific').val().trim();
+            var specificErrorDiv = $('#Specific').siblings('.error');
+
+            if (websiteValue === '') {
+                websiteErrorDiv.text('Website is required');
+                e.preventDefault(); // Prevent form submission
+            } else {
+                var websiteRegex = /^(https?:\/\/)?([a-z0-9-]+\.)?[a-z0-9-]+\.[a-z]+(\/.*)?$/i;
+
+                if (!websiteRegex.test(websiteValue)) {
+                    websiteErrorDiv.text('Invalid website format');
+                    e.preventDefault(); // Prevent form submission
+                }
+            }
+
+            if (reportedValue === '') {
+                reportedErrorDiv.text('Reported By is required');
+                e.preventDefault(); // Prevent form submission
+            } else {
+                var reportedRegex = /^[A-Za-z][A-Za-z\'',. -]{2,20}$/;
+
+                if (!reportedRegex.test(reportedValue)) {
+                    reportedErrorDiv.text('Invalid Format');
+                    e.preventDefault(); // Prevent form submission
+                }
+            }
+
+            if (specificValue === '') {
+                specificErrorDiv.text('Specific Requirements is required');
+                e.preventDefault(); // Prevent form submission
+            } else {
+                // var specificRegex = /^[a-zA-Z0-9\s]+$/;
+                var specificRegex = /^[a-zA-Z,\s]+$/;
+
+                if (!specificRegex.test(specificValue)) {
+                    specificErrorDiv.text('Invalid Format');
+                    e.preventDefault(); // Prevent form submission
+                }
+            }
+        });
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const dropdownToggle = document.getElementById("dropdown-toggle");
+        const dropdownContent = document.querySelector(".dropdown-content");
+
+        // Initialize dropdown button text with default selection (Product)
+        const defaultSelectedOption = "Product";
+        const dropdownBtnLabel = document.querySelector(".dropdown-btn");
+        dropdownBtnLabel.textContent = defaultSelectedOption;
+
+        // When the dropdown button is clicked, show/hide the dropdown content
+        dropdownToggle.addEventListener("change", function () {
+            dropdownContent.style.display = this.checked ? "block" : "none";
+        });
+
+        // When a checkbox inside the dropdown content is clicked, update the dropdown button text
+        const checkboxes = dropdownContent.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(function (checkbox) {
+            checkbox.addEventListener("change", function () {
+                const selectedOptions = Array.from(checkboxes)
+                    .filter(checkbox => checkbox.checked)
+                    .map(checkbox => checkbox.value);
+                dropdownBtnLabel.textContent = selectedOptions.length > 0 ? selectedOptions.join(", ") : "Select Options";
+            });
+        });
+
+        // Hide the dropdown content when clicking anywhere outside of it
+        document.addEventListener("click", function (event) {
+            if (!dropdownContent.contains(event.target) && !dropdownToggle.contains(event.target)) {
+                dropdownContent.style.display = "none";
+            }
+        });
+    });
+</script>
+
+{% endblock %}

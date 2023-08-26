@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="topnav">
+    <div class="container-fluid">
+        {% include 'menu.html' %}
+    </div>
+</div>
+
+{% if message %}
+<div class="alert alert-danger">
+    {{ message }}
+</div>
+{% endif %}
+
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row riskrow">
+            <div class="col-12">
+                <form method="post" class="fileupload" enctype="multipart/form-data" onsubmit="return validateForm();">
+                    {% csrf_token %}
+                    <div class="up1">
+                        <label for="csv_file" class="cssbuttons-io-button"> <svg viewBox="0 0 640 512" fill="white"
+                                height="1em" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z">
+                                </path>
+                            </svg>
+                            <span>Choose File</span></label>
+                        <input type="file" id="csv_file" name="csv_file" onchange="updateFileNameDisplay()">
+                    </div>
+                    <div class="mainsan">
+                        <input type="checkbox" id="dropdown-toggle" class="dropdown-toggle" hidden required>
+                        <label for="dropdown-toggle" class="dropdown-btn">Select Options</label>
+                        <div class="dropdown-content">
+                            {% for item in d %}
+                            <label>
+                                <input type="checkbox" name="choose_website" value="{{item}}"> {{item}} </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+
+                    <div id="message" style="display: none;">Checkbox is checked and Upload button clicked!</div>
+
+                    <script>
+                        document.getElementById("uploadButton").addEventListener("click", function () {
+                            var checkboxes = document.querySelectorAll('input[name="choose_website"]');
+                            var isChecked = false;
+
+                            checkboxes.forEach(function (checkbox) {
+                                if (checkbox.checked) {
+                                    isChecked = true;
+                                }
+                            });
+
+                            if (isChecked) {
+                                document.getElementById("message").style.display = "block";
+                            }
+                        });
+                    </script>
+
+                    <div class="up2">
+                        <div class="file-name">Selected file: <span id="file-name-display"></span></div>
+                        <button type="submit" class="upload-button cssbuttons-io-button">
+                            <span>Upload</span>
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+        <h4 style="text-align:center; font-style: italic;">{{dropdown.websitelink}}</h4>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="datatable-buttons3" class="table table-striped dt-responsive nowrap">
+                                <thead>
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>file Name</th>
+                                        <th>module</th>
+                                        <th>Download Files</th>
+                                        <th>Uploaded Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for li in text_files %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{ li.file.name }}</td>
+                                        <td>{{ li.module }}</td>
+                                        <td class="">
+                                            <button type="button" class="btn btn-primary"
+                                                onclick="window.location.href = '/download_csv/{{li.file.name}}/'">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z">
+                                                    </path>
+                                                    <path
+                                                        d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z">
+                                                    </path>
+                                                </svg>
+                                                Download
+                                            </button>
+                                        </td>
+                                        <td>{{li.uploaded_time}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!--showing files name in uploaded files-->
+<script>
+    function updateFileNameDisplay() {
+        var fileInput = document.getElementById("csv_file");
+        var fileNameDisplay = document.getElementById("file-name-display");
+
+        // Update the file name display with the selected file name
+        fileNameDisplay.innerText = fileInput.files[0].name;
+    }
+</script>
+
+
+
+<script>
+    // Function to remove file path from the file name
+    function removeFilePath(fileName) {
+        const lastSlashIndex = fileName.lastIndexOf("/");
+        if (lastSlashIndex !== -1) {
+            return fileName.substring(lastSlashIndex + 1);
+        }
+        return fileName;
+    }
+
+    // Update the file names in the table
+    const fileCells = document.querySelectorAll('#datatable-buttons3 tbody td:first-child');
+    fileCells.forEach(cell => {
+        const originalFileName = cell.textContent;
+        const cleanedFileName = removeFilePath(originalFileName);
+        cell.textContent = cleanedFileName;
+    });
+
+    // Function to download the file
+    function downloadFile(fileName) {
+        const cleanedFileName = removeFilePath(fileName);
+        window.location.href = '/download_csv/' + cleanedFileName;
+    }
+</script>
+
+
+
+<script>
+    // JavaScript function to validate the form before submission
+    function validateForm() {
+        var fileInput = document.getElementById('csv_file');
+        // Check if the file input has any selected files
+        if (fileInput.files.length === 0) {
+            // Display an alert message if no file is selected
+            alert('Please select a CSV file');
+            return false; // Prevent form submission
+        }
+        return true; // Allow form submission
+    }
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const dropdownToggle = document.getElementById("dropdown-toggle");
+        const dropdownContent = document.querySelector(".dropdown-content");
+
+        // Initialize dropdown button text with default selection (Product)
+        const defaultSelectedOption = "Product";
+        const dropdownBtnLabel = document.querySelector(".dropdown-btn");
+        dropdownBtnLabel.textContent = defaultSelectedOption;
+
+        // When the dropdown button is clicked, show/hide the dropdown content
+        dropdownToggle.addEventListener("change", function () {
+            dropdownContent.style.display = this.checked ? "block" : "none";
+        });
+
+        // When a checkbox inside the dropdown content is clicked, update the dropdown button text
+        const checkboxes = dropdownContent.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(function (checkbox) {
+            checkbox.addEventListener("change", function () {
+                const selectedOptions = Array.from(checkboxes)
+                    .filter(checkbox => checkbox.checked)
+                    .map(checkbox => checkbox.value);
+                dropdownBtnLabel.textContent = selectedOptions.length > 0 ? selectedOptions.join(", ") : "Select Options";
+            });
+        });
+
+        // Hide the dropdown content when clicking anywhere outside of it
+        document.addEventListener("click", function (event) {
+            if (!dropdownContent.contains(event.target) && !dropdownToggle.contains(event.target)) {
+                dropdownContent.style.display = "none";
+            }
+        });
+    });
+</script>
+
+{% endblock %}

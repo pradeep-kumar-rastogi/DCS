@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="topnav">
+    <div class="container-fluid">
+        {% include 'menu.html' %}
+    </div>
+</div>
+
+<div class="page-content">
+    <div class="container-fluid">
+        {% if combined_datas %}
+        <h4 style="text-align: center; font-style: italic;">{{ combined_datas.0.websitelink }}</h4>
+        {% else %}
+        <p>No data available.</p>
+        {% endif %}
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table id="datatable-buttons3" class="table table-striped dt-responsive nowrap">
+                            <thead>
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Specific Requirements</th>
+                                    <th>Module</th>
+                                    <th>Scrape time</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for data in combined_datas %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ data.specific }}</td>
+                                    <td>{{ data.choose_website }}</td>
+                                    <td>{{ data.uploaded_time }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div> 
+                </div> 
+            </div>
+        </div>
+    </div> 
+</div>
+<!-- End Page-content -->
+
+<script>
+    // Function to remove file path from the file name
+    function removeFilePath(fileName) {
+        const lastSlashIndex = fileName.lastIndexOf("/");
+        if (lastSlashIndex !== -1) {
+            return fileName.substring(lastSlashIndex + 1);
+        }
+        return fileName;
+    }
+
+    // Update the file names in the table
+    const fileCells = document.querySelectorAll('#datatable-buttons4 tbody td:nth-child(2)');
+    fileCells.forEach(cell => {
+        const originalFileName = cell.textContent;
+        const cleanedFileName = removeFilePath(originalFileName);
+        cell.textContent = cleanedFileName;
+    });
+
+    // Function to download the file
+    function downloadFile(fileName) {
+        const cleanedFileName = removeFilePath(fileName);
+        window.location.href = '/download_url/' + cleanedFileName;
+    }
+</script>
+
+
+
+{% endblock %}

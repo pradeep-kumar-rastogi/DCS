@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="topnav">
+    <div class="container-fluid">
+       {% include 'menu.html' %}
+ 
+    </div>
+</div>
+
+<div class="page-content">
+    <center>
+        <h1>Upload Your Website List Here</h1>
+    </center>
+    <div class="container-fluid">
+        <!-- start page title -->
+        <form name="myform" action="" method="post" enctype="multipart/form-data" id="myform">
+            {% csrf_token %}
+            <div>
+                <label for="website_list">Website<sup class="text-danger">*</sup> :</label>
+                <input type="url" placeholder="Enter your site name" id="website_list" name="website_list"
+                    value="{{result.website_list}}" required>
+                <div class="error"></div>
+            </div>
+            <!-- <div>
+                <label for="Uploaded">Uploaded By<sup class="text-danger">*</sup> :</label>
+                <input type="text" placeholder="Enter name by submission" id="Uploaded" name="Uploaded"
+                    value="{{result.Uploaded}}" required>
+                <div class="error"></div>
+            </div> -->
+            <div class="san_btn"><input type="submit" value="Submit"></div>
+
+        </form>
+
+
+
+        <script>
+            $(document).ready(function () {
+                $('#website').on('keyup', function () {
+                    var websiteValue = $(this).val().trim();
+                    var errorDiv = $(this).siblings('.error');
+
+                    if (websiteValue === '') {
+                        errorDiv.text('Website is required');
+                    } else {
+                        // Regular expression to validate website format
+                        var websiteRegex = /^(https?:\/\/)?([a-z0-9-]+\.)?[a-z0-9-]+\.[a-z]+(\/.*)?$/i;
+
+                        if (!websiteRegex.test(websiteValue)) {
+                            errorDiv.text('Invalid website format');
+                        } else {
+                            errorDiv.empty();
+                        }
+                    }
+                });
+
+                $('#Reported').on('keyup', function () {
+                    var reportedValue = $(this).val().trim();
+                    var errorDiv = $(this).siblings('.error');
+
+                    if (reportedValue === '') {
+                        errorDiv.text('Reported By is required');
+                    } else {
+                        // Regular expression to validate reported name format
+                        var reportedRegex = /^[A-Za-z][A-Za-z\'',. -]{2,20}$/;
+
+                        if (!reportedRegex.test(reportedValue)) {
+                            errorDiv.text('Invalid Format');
+                        } else {
+                            errorDiv.empty();
+                        }
+                    }
+                });
+
+                $('#Specific').on('keyup', function () {
+                    var specificValue = $(this).val().trim();
+                    var errorDiv = $(this).siblings('.error');
+
+                    if (specificValue === '') {
+                        errorDiv.text('Specific Requirements is required');
+                    } else {
+                        // Regular expression to validate specific requirements format
+                        var specificRegex = /^[a-zA-Z,\s]+$/;
+
+                        if (!specificRegex.test(specificValue)) {
+                            errorDiv.text('Invalid Format');
+                        } else {
+                            errorDiv.empty();
+                        }
+                    }
+                });
+
+                $('#myform').on('submit', function (e) {
+                    var websiteValue = $('#website').val().trim();
+                    var websiteErrorDiv = $('#website').siblings('.error');
+                    var reportedValue = $('#Reported').val().trim();
+                    var reportedErrorDiv = $('#Reported').siblings('.error');
+                    var specificValue = $('#Specific').val().trim();
+                    var specificErrorDiv = $('#Specific').siblings('.error');
+
+                    if (websiteValue === '') {
+                        websiteErrorDiv.text('Website is required');
+                        e.preventDefault(); // Prevent form submission
+                    } else {
+                        var websiteRegex = /^(https?:\/\/)?([a-z0-9-]+\.)?[a-z0-9-]+\.[a-z]+(\/.*)?$/i;
+
+                        if (!websiteRegex.test(websiteValue)) {
+                            websiteErrorDiv.text('Invalid website format');
+                            e.preventDefault(); // Prevent form submission
+                        }
+                    }
+
+                    if (reportedValue === '') {
+                        reportedErrorDiv.text('Reported By is required');
+                        e.preventDefault(); // Prevent form submission
+                    } else {
+                        var reportedRegex = /^[A-Za-z][A-Za-z\'',. -]{2,20}$/;
+
+                        if (!reportedRegex.test(reportedValue)) {
+                            reportedErrorDiv.text('Invalid Format');
+                            e.preventDefault(); // Prevent form submission
+                        }
+                    }
+
+                    if (specificValue === '') {
+                        specificErrorDiv.text('Specific Requirements is required');
+                        e.preventDefault(); // Prevent form submission
+                    } else {
+                        // var specificRegex = /^[a-zA-Z0-9\s]+$/;
+                        var specificRegex = /^[a-zA-Z,\s]+$/;
+
+                        if (!specificRegex.test(specificValue)) {
+                            specificErrorDiv.text('Invalid Format');
+                            e.preventDefault(); // Prevent form submission
+                        }
+                    }
+                });
+            });
+        </script>
+    </div>
+
+
+
+    {% endblock %}

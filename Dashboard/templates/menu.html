@@ -1,0 +1,45 @@
+        <nav class="navbar navbar-light navbar-expand-lg topnav-menu">
+            <div class="collapse navbar-collapse" id="topnav-menu-content">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">
+                            <i class="bx bx-home-smile"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-components" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="bx bx-cookie"></i>Scraping Requisition <div class="arrow-down"></div>
+                        </a>
+
+                        <div class="dropdown-menu" aria-labelledby="topnav-components">
+                            <a href="{% url 'website' %}" class="dropdown-item">Website</a>
+                           
+                            <a href="{% url 'Scrape_url' %}" class="dropdown-item">Upload Scrape Files</a>
+                            
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-forms" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="bx bxs-eraser"></i>Scraping <div class="arrow-down"></div>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="topnav-forms">
+                            <a href="{% url 'form_show' %}" class="dropdown-item">Scraping Requisition</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-forms" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="bx bxs-eraser"></i>Report <div class="arrow-down"></div>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="topnav-forms">
+                            <a href="{% url 'report' websitelink_id=1%}" class="dropdown-item">View Report</a>
+
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>

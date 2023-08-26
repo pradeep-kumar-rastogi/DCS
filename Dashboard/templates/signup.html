@@ -1,0 +1,288 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Design by foolishdeveloper.com -->
+    <title>Data Center Management</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <!--Stylesheet-->
+
+      <link  rel="icon" type="image/x-icon" href="https://cdn.raptorsupplies.com/pub/media/favicon/stores/1/favicon.png" />
+<link  rel="shortcut icon" type="image/x-icon" href="https://cdn.raptorsupplies.com/pub/media/favicon/stores/1/favicon.png" />
+
+    <style media="screen">
+        *,
+        *:before,
+        *:after {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            position: relative;
+            background: rgb(236, 204, 164);
+            background: linear-gradient(90deg, rgba(236, 204, 164, 1) 0%, rgba(239, 226, 240, 1) 49%, rgba(214, 212, 240, 1) 100%, rgba(63, 9, 121, 1) 100%);
+            padding: 50px 0px;
+            height: 100vh;
+        }
+
+        .page-content h3 {
+            color: #080710;
+            margin-bottom: 30px;
+        }
+
+        .page-content label {
+            color: #080710;
+            margin-top: 10px;
+        }
+
+        .page-content button {
+            background-color: #45a049;
+            color: #fff;
+            margin-top: 20px;
+        }
+
+        .page-content input {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            color: #000
+        }
+
+        form {
+            height: 520px;
+            width: 400px;
+            background-color: #fff;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            top: 50%;
+            left: 50%;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+            padding: 41px 40px;
+        }
+
+        form * {
+            font-family: 'Poppins', sans-serif;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+            outline: none;
+            border: none;
+            color: black;
+        }
+
+        form h3 {
+            font-size: 32px;
+            font-weight: 500;
+            line-height: 19px;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 30px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        input {
+            display: block;
+            height: 40px;
+            width: 100%;
+            border-radius: 3px;
+            padding: 0 10px;
+            margin-top: 2px;
+            font-size: 14px;
+            font-weight: 300;
+        }
+
+        ::placeholder {
+            color: #e5e5e5;
+        }
+
+        button {
+            margin-top: 14px;
+            width: 100%;
+            background-color: #ffffff;
+            color: #080710;
+            padding: 15px 0;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+
+        .field-wrap {
+            position: relative;
+        }
+
+        #password-field1 {
+            position: absolute;
+            right: 8px;
+            top: 35%;
+        }
+
+        #password-field2 {
+            position: absolute;
+            right: 8px;
+            top: 35%;
+        }
+
+        .alert.alert-danger {
+            font-size: 11px;
+            color: red;
+            background: #fff;
+            padding: 2px 5px;
+            margin-top: 10px;
+        }
+
+        /* CSS styles */
+
+        .messages {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .messages li {
+            color: red;
+            /* Style for error messages */
+        }
+
+        .messages li.success {
+            color: green;
+            /* Style for success messages */
+        }
+    </style>
+</head>
+
+<body>
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %}
+    </ul>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            setTimeout(function () {
+                $('.messages').fadeOut('slow');
+            }, 5000);  // Adjust the duration (in milliseconds) as needed
+        });
+    </script>
+    {% endif %}
+
+    <div class="page-content">
+
+        <form action="" method="post">
+            {% csrf_token %}
+            <h3>Signup</h3>
+
+            <label for="username">Username</label>
+            <input type="text" placeholder="Username" name="username" id="username" required>
+
+            <label for="email">Email</label>
+            <input type="email" placeholder="Email or Phone" name="email" id="email" required>
+
+            <label for="password1">Password</label>
+            <div class="field-wrap">
+                <input type="password" placeholder="Password" id="password1" name="password1" required>
+                <span id="password-field1" class="fa fa-fw fa-eye-slash field-icon toggle-password"></span>
+            </div>
+
+
+            <label for="password2">Confirm Password</label>
+            <div class="field-wrap">
+                <input type="password" placeholder="Confirm Password" id="password2" name="password2" required>
+                <span id="password-field2" class="fa fa-fw fa-eye-slash field-icon toggle-password"></span>
+            </div>
+
+
+            <button type="submit">Signup</button>
+            <a href="{% url 'login' %}" style="text-decoration: none;padding: 5px; margin: 10px 0;display: block;text-align: center;">Already have an account? Sign In</a>
+
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
+        integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        $(document).ready(function () {
+            $('#password-field2').click(function () {
+                var input = $('#password2');
+                if (input.val() !== "") {
+                    $(this).toggleClass("fa-eye-slash fa-eye");
+                    if (input.attr("type") === "password") {
+                        input.attr("type", "text");
+                    } else {
+                        input.attr("type", "password");
+                    }
+                } else {
+                    $(this).removeClass("fa-eye").addClass('fa-eye-slash');
+                    input.attr("type", "password");
+                }
+            });
+
+            $('#password2').on('keyup', function () {
+                if ($(this).val() !== "") {
+                    $('#password-field2').removeClass("fa-eye").addClass('fa-eye-slash');
+                    $(this).attr("type", "password");
+                }
+            })
+        });
+
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#password-field1').click(function () {
+                var input = $('#password1');
+                if (input.val() !== "") {
+                    $(this).toggleClass("fa-eye-slash fa-eye");
+                    if (input.attr("type") === "password") {
+                        input.attr("type", "text");
+                    } else {
+                        input.attr("type", "password");
+                    }
+                } else {
+                    $(this).removeClass("fa-eye").addClass('fa-eye-slash');
+                    input.attr("type", "password");
+                }
+            });
+
+            $('#password1').on('keyup', function () {
+                if ($(this).val() !== "") {
+                    $('#password-field1').removeClass("fa-eye").addClass('fa-eye-slash');
+                    $(this).attr("type", "password");
+                }
+            })
+        });
+
+    </script>
+    <!-- <script>
+        // Remove error messages after 2 seconds
+        setTimeout(function () {
+            var errorMessages = document.querySelectorAll('.alert-danger');
+            errorMessages.forEach(function (element) {
+                element.remove();
+            });
+        }, 2000);
+    </script> -->
+
+
+
+</body>
+
+</html>

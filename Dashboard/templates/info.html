@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="topnav">
+    <div class="container-fluid">
+           {% include 'menu.html' %}
+    </div>
+</div>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+        {% endfor %}
+</ul>
+{% endif %}
+
+<div class="page-content">
+    <div class="container-fluid">
+        <!-- start page title -->
+        <!-- end page title -->
+        <div class="row">
+            <div class="col-12">
+                <!-- <h4 class="card-title">Your Scraping Request</h4> -->
+                <div class="card pardesan">
+                    <center><h2>Scraping Requisition info </h2></center>
+                    {% for it in result %}
+                    {{ forloop.counter }}
+                    <div class="card-body">                        
+                        <div class="table-responsive">
+                            
+                            <table class="table">
+                                <tbody>
+                                    
+                                    <tr>
+                                        <th scope="row">Website</th>
+                                        <td>{{it.websitelink}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Priority</th>
+                                        <td>{{it.priority_list}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Module</th>
+                                        <td>{{it.choose_website}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">File</th>
+                                        <td >
+                                            {% if it.file %}                                            
+                                            <a href="/download/{{it.file.name}}/" >{{it.file.name}}</a>
+                                            {% else %}
+                                                File not selected
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                     
+                                    <tr>
+                                        <th scope="row">Upload Time</th>
+                                        <td>{{it.uploaded_time}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Requested By</th>
+                                        <td>{{it.reported}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Specific Requirements</th>
+                                        <td>{{it.specific}}</td>
+                                    </tr>
+                                    
+                                </tbody>
+                            </table>
+                            
+                        </div>
+                    </div> <!-- end card body-->
+                    {% endfor %}
+                </div> <!-- end card -->
+                
+            </div><!-- end col-->
+        </div>
+        <!-- end row-->
+    </div> <!-- container-fluid -->
+</div>
+<script>
+    // Get the content of the <td> element
+    const tdElement = document.getElementById("filevalue");
+    const filePath = tdElement.innerText;
+
+    // Extract the file name from the path using the last occurrence of "/"
+    const fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
+
+    // Update the content of the <td> element with the file name
+    tdElement.innerText = fileName;
+</script>
+
+{% endblock %}
